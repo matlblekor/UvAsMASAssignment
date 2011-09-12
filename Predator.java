@@ -6,8 +6,15 @@ import java.util.*;
 public class Predator
   extends Agent
 {
-  public Predator() {}
-  
+  int xp[];
+  int yp[];
+  int nMoveDirection;
+
+  public Predator() {
+  	this.xp = new int[2];
+  	this.yp = new int[2];
+  }
+ 
   /** This method initialize the predator by sending the initialization message
       to the server. */
   public void initialize()
@@ -19,8 +26,8 @@ public class Predator
   /** This message determines a new movement command. Currently it only moves
       random. This can be improved.. */
   public String determineMovementCommand()
-  {  
-    switch( (int)(Math.random()*4) )
+  {
+    switch( this.nMoveDirection )
     {
       case 0:  return( "(move north)" );
       case 1:  return( "(move south)" );
@@ -36,10 +43,10 @@ public class Predator
       currently  in the visible range of the predator. */
   public void processVisualInformation( String strMessage ) 
   {
-    int i = 0, x = 0, y = 0;
+    int i = 0, x = 0, y = 0, nPray = 0;
     String strName = "";
     StringTokenizer tok = new StringTokenizer( strMessage.substring(5), ") (");
-    
+    System.out.println(strMessage);
     while( tok.hasMoreTokens( ) )
     {
       if( i == 0 ) strName = tok.nextToken();                // 1st = name
@@ -47,11 +54,46 @@ public class Predator
       if( i == 2 ) y = Integer.parseInt( tok.nextToken() );  // 3rd = y coord
       if( i == 2 )
       {	
+      	if (strName.equals("prey")) {
+      		xp[nPray] = x;
+      		yp[nPray] = y;
+      		nPray++;
+      	}
+
         System.out.println( strName + " seen at (" + x + ", " + y + ")" );
+
       // TODO: do something nice with this information!
       }
       i = (i+1)%3;
     }
+
+    // find closest pray
+    if (nPray < 2 || (Math.abs(xp[0]) + Math.abs(yp[0]) < Math.abs(xp[1]) + Math.abs(yp[1]))) {
+    	// pray 1 is closer - move towards it
+    	if (Math.abs(xp[0]) > Math.abs(yp[0])) {
+    		// move towards the X axis
+    		this.nMoveDirection = (xp[0] < 0) ? 3 : 2;
+    	}
+    	else {
+    		// move towards the Y axis
+    		this.nMoveDirection = (xp[0] < 0) ? 0 : 1;
+    	}
+    }
+    else {
+    	// pray 2 is closer - move towards it
+    	if (Math.abs(xp[1]) > Math.abs(yp[1])) {
+    		// move towards the X axis
+    		this.nMoveDirection = (xp[0] < 0) ? 3 : 2;
+    	}
+    	else {
+    		// move towards the Y axis
+    		this.nMoveDirection = (xp[0] < 0) ? 0 : 1;
+    	}
+
+    }
+    
+    System.out.println( "Pray 1:" + " seen at (" + xp[0] + ", " + yp[0] + ")" );
+    System.out.println( "Pray 2:" + " seen at (" + yp[1] + ", " + yp[1] + ")" );
   }
 
 
