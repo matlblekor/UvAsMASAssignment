@@ -76,18 +76,18 @@ public class Predator
     	}
     	else {
     		// move towards the Y axis
-    		this.nMoveDirection = (yp[0] < 0) ? 1 : 0;
+    		this.nMoveDirection = (xp[0] < 0) ? 0 : 1;
     	}
     }
     else {
     	// pray 2 is closer - move towards it
     	if (Math.abs(xp[1]) > Math.abs(yp[1])) {
-    		// move on the X axis
+    		// move towards the X axis
     		this.nMoveDirection = (xp[0] < 0) ? 3 : 2;
     	}
     	else {
-    		// move on the Y axis
-    		this.nMoveDirection = (yp[0] < 0) ? 1 : 0;
+    		// move towards the Y axis
+    		this.nMoveDirection = (xp[0] < 0) ? 0 : 1;
     	}
 
     }
